@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ntapi.h"
 #include "pipe.h"
 
+char g_pipe_name[MAX_PATH];
+
 static int _pipe_utf8(unsigned short c, unsigned char *out)
 {
     if(c < 0x80) {
@@ -141,7 +143,7 @@ int pipe(const char *fmt, ...)
         _pipe_sprintf(buf, fmt, args);
         va_end(args);
 
-        return CallNamedPipe(PIPE_NAME, buf, len, buf, len,
+        return CallNamedPipe(g_pipe_name, buf, len, buf, len,
             (unsigned long *) &len, 0);
     }
     return -1;
@@ -157,7 +159,7 @@ int pipe2(void *out, int *outlen, const char *fmt, ...)
         _pipe_sprintf(buf, fmt, args);
         va_end(args);
 
-        return CallNamedPipe(PIPE_NAME, buf, len, out, *outlen,
+        return CallNamedPipe(g_pipe_name, buf, len, out, *outlen,
             (DWORD *) outlen, 0);
     }
     return -1;
